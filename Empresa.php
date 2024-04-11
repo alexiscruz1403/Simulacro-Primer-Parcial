@@ -56,18 +56,41 @@ class Empresa{
     }
     public function __toString(){
         $cadena="Denominacion: ".$this->getDenominacion()."\n".
-                "Direccion: ".$this->getDireccion()."\n".
-                "Motos: \n\n";
-        foreach($this->getArregloMotos() as $moto){
-            $cadena=$cadena.$moto."\n\n";
+                "Direccion: ".$this->getDireccion()."\n";
+        if(count($this->getArregloMotos())==0){
+            $cadena=$cadena."No hay motos cargadas\n";
+        }else{
+            $cadena=$cadena."Motos: \n";
+            foreach($this->getArregloMotos() as $moto){
+                $cadena=$cadena."*".$moto->getDescripcion()."\n";
+                if($moto->getEstadoActiva()){
+                    $cadena=$cadena." Estado: Activa\n";
+                }else{
+                    $cadena=$cadena." Estado: No activa\n";
+                }
+            }
         }
-        $cadena=$cadena."Clientes: \n\n";
-        foreach($this->getArregloCliente() as $cliente){
-            $cadena=$cadena.$cliente."\n\n";
+        if(count($this->getArregloCliente())==0){
+            $cadena=$cadena."No hay clientes cargados\n";
+        }else{
+            $cadena=$cadena."Clientes: \n";
+            foreach($this->getArregloCliente() as $cliente){
+                $cadena=$cadena."*".$cliente->getNombre()." ".$cliente->getApellido()."\n";
+                if($cliente->getDadoBaja()){
+                    $cadena=$cadena." Cliente dado de baja\n";
+                }else{
+                    $cadena=$cadena." Cliente activo\n";
+                }
+            }
         }
-        $cadena=$cadena."Ventas: \n\n";
-        foreach($this->getArregloVenta() as $venta){
-            $cadena=$cadena.$venta."\n\n";
+        if(count($this->getArregloVenta())==0){
+            $cadena=$cadena."No hay ventas cargadas\n";
+        }else{
+            $cadena=$cadena."Ventas: \n";
+            foreach($this->getArregloVenta() as $venta){
+                $cadena=$cadena."*Numero ".$venta->getNumero()."\n".
+                " Precio final: $".$venta->getPrecioFinal()."\n";
+            }
         }
         return $cadena;
     }
@@ -88,22 +111,6 @@ class Empresa{
             $moto=null;
         }
         return $moto;
-    }
-
-    /**
-     * Retorna el objeto venta dentro de la coleccion de ventas ubicado en la posicion dada por parametro
-     * Retorna null enc caso de ingresar una posicion invalida
-     * @param int $posicion
-     * @return Venta
-     */
-    public function darVentaEn($posicion){
-        $cantidadVentas=count($this->getArregloVenta());
-        if($cantidadVentas!=0 && $posicion>=0 && $posicion<$cantidadVentas){
-            $venta=$this->getArregloMotos()[$posicion];
-        }else{
-            $venta=null;
-        }
-        return $venta;
     }
 
     /**
@@ -139,26 +146,32 @@ class Empresa{
      * @return boolean
      */
     public function registrarVenta($colCodigosMoto, $unCliente){
-        $precioFinal=-1;
-        if(!$unCliente->getDadoBaja()){
-            $arregloMotosVenta=array();
-            foreach($colCodigosMoto as $codigo){
-                $unaMoto=$this->retornaMoto($codigo);
-                if($unaMoto!=null && $unaMoto->getEstadoActiva()){
-                    array_push($arregloMotosVenta,$unaMoto);
+        $arregloMotoVenta=array();
+        $unaVenta=new Venta(0,0,$unCliente,$arregloMotoVenta);
+        $precioFinal=0;
+        foreach($colCodigosMoto as $codigo){
+            $moto=$this->retornaMoto($codigo);
+            if($moto!=null){
+                if($unaVenta->incorporarMoto($moto)){
+                    $precioFinal=$precioFinal+$moto->darPrecioVenta();
+                    $moto->setEstadoActiva(false);
                 }
             }
-            if(count($arregloMotosVenta)!=0){
-                echo "Ingrese el numero de venta: ";
-                $codigoVenta=trim(fgets(STDIN));
-                echo "Ingrese una fecha: ";
-                $fecha=trim(fgets(STDIN));
-                $unaVenta=new Venta($codigoVenta,$fecha,$unCliente,$arregloMotosVenta);
-                $arregloVenta=$this->getArregloVenta();
-                array_push($arregloVenta,$unaVenta);
-                $this->setArregloVenta($arregloVenta);
-                $precioFinal=$unaVenta->getPrecioFinal();
-            }
+        }
+        if(count($unaVenta->getArregloMotos())!=0){
+            echo "INGRESE LOS DATOS DE LA VENTA\n";
+            echo "Numero de venta: ";
+            $numero=trim(fgets(STDIN));
+            echo "Fecha: ";
+            $fecha=trim(fgets(STDIN));
+            $unaVenta->setNumero($numero);
+            $unaVenta->setFecha($fecha);
+            $unaVenta->setPrecioFinal($precioFinal);
+            $arregloVentas=$this->getArregloVenta();
+            array_push($arregloVentas,$unaVenta);
+            $this->setArregloVenta($arregloVentas);
+        }else{
+            $precioFinal=-1;
         }
         return $precioFinal;
     }

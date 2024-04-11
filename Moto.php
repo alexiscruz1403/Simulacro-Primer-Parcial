@@ -97,7 +97,7 @@ class Moto{
             $anio=2024-$this->getAnioFabricacion();
             $costo=$this->getCosto();
             $porcentaje=$this->getPorcentajeIncrementoAnual();
-            $venta=$costo+$costo*($anio*$porcentaje);
+            $venta=$costo+$costo*($anio*($porcentaje/100));
         }else{
             $venta=-1;
         }

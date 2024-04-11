@@ -67,9 +67,9 @@ class Cliente{
                 "Tipo de documento: ".$this->getTipoDocumento()."\n".
                 "Numero Documento: ".$this->getNumeroDocumento()."\n";
         if($this->dadoBaja){
-            $cadena=$cadena."Usuario dado de baja\n";
+            $cadena=$cadena."Cliente dado de baja\n";
         }else{
-            $cadena=$cadena."Usuario activo\n";
+            $cadena=$cadena."Cliente activo\n";
         }
         return $cadena;
     }

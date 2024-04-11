@@ -66,9 +66,9 @@ class Venta{
         $cadena="Codigo: ".$this->getNumero()."\n".
                 "Fecha: ".$this->getFecha()."\n".
                 "Cliente: ".$this->getCliente()->getNombre()." ".$this->getCliente()->getApellido()."\n".
-                "Motos: \n\n";
+                "Motos: \n";
         foreach($this->getArregloMotos() as $moto){
-            $cadena=$cadena.$moto."\n";
+            $cadena=$cadena."*".$moto->getDescripcion()."\n";
         }
         $cadena=$cadena."Precio final: ".$this->getPrecioFinal()."\n";
         return $cadena;
