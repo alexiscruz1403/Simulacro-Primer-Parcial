@@ -35,6 +35,10 @@ class Cliente{
         $this->numeroDocumento=$unNumeroDocumento;
     }
 
+    public function setDadoBaja($unEstado){
+        $this->dadoBaja=$unEstado;
+    }
+
     //Observadores
 
     public function getNombre(){
@@ -53,10 +57,20 @@ class Cliente{
         return $this->numeroDocumento;
     }
 
+    public function getDadoBaja(){
+        return $this->dadoBaja;
+    }
+
     public function __toString(){
-        return "Nombre: ".$this->getNombre()."\n".
+        $cadena="Nombre: ".$this->getNombre()."\n".
                 "Apellido: ".$this->getApellido()."\n".
                 "Tipo de documento: ".$this->getTipoDocumento()."\n".
                 "Numero Documento: ".$this->getNumeroDocumento()."\n";
+        if($this->dadoBaja){
+            $cadena=$cadena."Usuario dado de baja\n";
+        }else{
+            $cadena=$cadena."Usuario activo\n";
+        }
+        return $cadena;
     }
 }
