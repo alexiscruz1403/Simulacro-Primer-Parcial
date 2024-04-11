@@ -3,7 +3,7 @@
 class Moto{
 
     //Atributos
-    private $codigo; //String
+    private $codigo; //Int
     private $costo; //Double
     private $anioFabricacion; //Int
     private $descripcion; //String

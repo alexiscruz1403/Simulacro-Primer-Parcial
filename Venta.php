@@ -1,5 +1,4 @@
 <?php
-include_once 'Fecha.php';
 include_once 'Moto.php';
 include_once 'Cliente.php';
 
@@ -7,7 +6,7 @@ class Venta{
 
     //Atributos
     private $numero; //Int
-    private $objFecha; //Instancia Fecha
+    private $fecha; //String
     private $objCliente; //Instancia Cliente
     private $colObjMoto; //Arreglo Instancias Moto
     private $precioFinal; //Double
@@ -15,7 +14,7 @@ class Venta{
     //Constructor
     public function __construct($unNumero, $unaFecha, $unCliente, $unArregloMoto){
         $this->numero=$unNumero;
-        $this->objFecha=$unaFecha;
+        $this->fecha=$unaFecha;
         $this->objCliente=$unCliente;
         $this->colObjMoto=$unArregloMoto;
         $this->precioFinal=$this->calculaPrecioFinal();
@@ -27,7 +26,7 @@ class Venta{
     }
 
     public function setFecha($unaFecha){
-        $this->objFecha=$unaFecha;
+        $this->fecha=$unaFecha;
     }
 
     public function setCliente($unCliente){
@@ -48,7 +47,7 @@ class Venta{
     }
 
     public function getFecha(){
-        return $this->objFecha;
+        return $this->fecha;
     }
 
     public function getCliente(){
@@ -65,7 +64,7 @@ class Venta{
 
     public function __toString(){
         $cadena="Codigo: ".$this->getNumero()."\n".
-                "Fecha: ".$this->getFecha()->fechaAbreviada().
+                "Fecha: ".$this->getFecha()."\n".
                 "Cliente: ".$this->getCliente()->getNombre()." ".$this->getCliente()->getApellido()."\n".
                 "Motos: \n\n";
         foreach($this->getArregloMotos() as $moto){

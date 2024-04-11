@@ -1,8 +1,8 @@
 <?php
 include 'Venta.php';
 
-$unaFecha=new Fecha(10,4,2024);
-$otraFecha=new Fecha(11,4,2024);
+$unaFecha=trim(fgets(STDIN));
+$otraFecha=trim(fgets(STDIN));
 $unCliente=new Cliente("Alexis","Cruz","DNI",44555666);
 $otroCliente=new Cliente("Juan","Perez","DNI",40100200);
 $unaMoto=new Moto(1,1000,2019,"Benelli Imperiale 400 ",10);
