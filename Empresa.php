@@ -153,25 +153,26 @@ class Empresa{
      * @return boolean
      */
     public function registrarVenta($colCodigosMoto, $unCliente){
-        $precioFinal=0;
         if(!$unCliente->getDadoBaja()){
             $arregloMotoVenta=array();
+            $unaVenta=new Venta(0,0,$unCliente,$arregloMotoVenta,0);
             foreach($colCodigosMoto as $codigo){
                 $moto=$this->retornaMoto($codigo);
-                if($moto!=null && $moto->getEstadoActiva()){
-                    array_push($arregloMotoVenta,$moto);
-                    $precioFinal=$precioFinal+$moto->darPrecioVenta();
+                if($moto!=null){
+                    $unaVenta->incorporarMoto($moto);
                     $moto->setEstadoActiva(false);
                 }
             }
-            if(count($arregloMotoVenta)!=0){
+            if(count($unaVenta->getArregloMotos())!=0){
                 echo "INGRESE LOS DATOS DE LA VENTA\n";
                 echo "Numero de venta: ";
                 $numero=trim(fgets(STDIN));
                 echo "Fecha: ";
                 $fecha=trim(fgets(STDIN));
-                $unaVenta=new Venta($numero,$fecha,$unCliente,$arregloMotoVenta,$precioFinal);
+                $unaVenta->setNumero($numero);
+                $unaVenta->setFecha($fecha);
                 $this->agregarVenta($unaVenta);
+                $precioFinal=$unaVenta->getPrecioFinal();
             }
             else{
                 $precioFinal=-1;
