@@ -135,6 +135,16 @@ class Empresa{
     }
 
     /**
+     * Agrega una venta a la coleccion de ventas
+     * @param Venta $unaVenta
+     */
+    public function agregarVenta($unaVenta){
+        $arregloVentas=$this->getArregloVenta();
+        array_push($arregloVentas,$unaVenta);
+        $this->setArregloVenta($arregloVentas);
+    }
+
+    /**
      * Crea una instancia venta y la agrega a la coleccion de ventas
      * Antes verifica que el cliente no esta dado de baja
      * Antes verifica que las motos esten disponibles para la venta
@@ -146,30 +156,29 @@ class Empresa{
      * @return boolean
      */
     public function registrarVenta($colCodigosMoto, $unCliente){
-        $arregloMotoVenta=array();
-        $unaVenta=new Venta(0,0,$unCliente,$arregloMotoVenta);
         $precioFinal=0;
-        foreach($colCodigosMoto as $codigo){
-            $moto=$this->retornaMoto($codigo);
-            if($moto!=null){
-                if($unaVenta->incorporarMoto($moto)){
+        if(!$unCliente->getDadoBaja()){
+            $arregloMotoVenta=array();
+            foreach($colCodigosMoto as $codigo){
+                $moto=$this->retornaMoto($codigo);
+                if($moto!=null && $moto->getEstadoActiva()){
+                    array_push($arregloMotoVenta,$moto);
                     $precioFinal=$precioFinal+$moto->darPrecioVenta();
                     $moto->setEstadoActiva(false);
                 }
             }
-        }
-        if(count($unaVenta->getArregloMotos())!=0){
-            echo "INGRESE LOS DATOS DE LA VENTA\n";
-            echo "Numero de venta: ";
-            $numero=trim(fgets(STDIN));
-            echo "Fecha: ";
-            $fecha=trim(fgets(STDIN));
-            $unaVenta->setNumero($numero);
-            $unaVenta->setFecha($fecha);
-            $unaVenta->setPrecioFinal($precioFinal);
-            $arregloVentas=$this->getArregloVenta();
-            array_push($arregloVentas,$unaVenta);
-            $this->setArregloVenta($arregloVentas);
+            if(count($arregloMotoVenta)!=0){
+                echo "INGRESE LOS DATOS DE LA VENTA\n";
+                echo "Numero de venta: ";
+                $numero=trim(fgets(STDIN));
+                echo "Fecha: ";
+                $fecha=trim(fgets(STDIN));
+                $unaVenta=new Venta($numero,$fecha,$unCliente,$arregloMotoVenta,$precioFinal);
+                $this->agregarVenta($unaVenta);
+            }
+            else{
+                $precioFinal=-1;
+            }
         }else{
             $precioFinal=-1;
         }

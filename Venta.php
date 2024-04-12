@@ -12,12 +12,12 @@ class Venta{
     private $precioFinal; //Double
 
     //Constructor
-    public function __construct($unNumero, $unaFecha, $unCliente, $unArregloMoto){
+    public function __construct($unNumero, $unaFecha, $unCliente, $unArregloMoto, $unPrecio){
         $this->numero=$unNumero;
         $this->fecha=$unaFecha;
         $this->objCliente=$unCliente;
         $this->colObjMoto=$unArregloMoto;
-        $this->precioFinal=$this->calculaPrecioFinal();
+        $this->precioFinal=$unPrecio;
     }
 
     //Modificadores
@@ -75,18 +75,6 @@ class Venta{
     }
 
     //Propios
-
-    /**
-     * Calcula el precio final de un arreglo de obejtos Moto
-     * @return double
-     */
-    public function calculaPrecioFinal(){
-        $precio=0;
-        foreach($this->getArregloMotos() as $moto){
-            $precio=$precio+$moto->darPrecioVenta();
-        }
-        return $precio;
-    }
 
     /**
      * Agrega una instancia de la clase moto al arreglo de colObjMoto
